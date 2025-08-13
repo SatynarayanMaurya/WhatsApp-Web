@@ -2,7 +2,7 @@ import React from 'react'
 
 function IndividualStatusPageSkeleton() {
   return (
-    <div className='flex h-screen  fixed inset-0 left-16 bg-black/60 z-10'>
+    <div className='flex h-screen  fixed inset-0 left-16 bg-black z-10'>
         <div className=' flex flex-col gap-6 animate-pulse  lg:w-[32%] w-[25rem]'>
             <div className='flex gap-4 items-center px-4 mt-2 pb-2 border-b border-[#454545]'>
                 <div>
