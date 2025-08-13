@@ -1,14 +1,16 @@
 # 📱 WhatsApp Web Clone
 
-A real-time chat application inspired by **WhatsApp Web** built with **React**, **Node.js**, **Socket.IO**, and **MongoDB**.  
-Supports **one-to-one messaging**, **message seen ticks**, **online/offline status**, and **chat history** – all in real time.
+A real-time chat application inspired by **WhatsApp Web**, built with React, Node.js, Socket.IO, and MongoDB. Features include **one-to-one messaging**, **AI-powered chatbot** integration, message seen indicators, **online/offline** presence tracking, **chat history**, and real-time status updates
 
 ---
 
 ## 🚀 Features
 
-- **Real-time Messaging**  
-  Instant message delivery using **Socket.IO** with smooth UI updates.
+- **Real-Time Messaging**  
+  Seamless one-to-one messaging using **Socket.IO**, replicating WhatsApp-like instant delivery and smooth UI updates.
+
+- **AI Chatbot Integration**  
+  Built-in chatbot powered by **Google Gemini**, providing intelligent, conversational responses similar to Meta AI in WhatsApp.
 
 - **Message Seen Ticks**  
   ✅ Single tick = Sent  
@@ -16,15 +18,20 @@ Supports **one-to-one messaging**, **message seen ticks**, **online/offline stat
   ✅✅ (Blue) = Seen
 
 - **Online/Offline Status**  
-  Tracks and displays when users are online or offline.
+  Instantly detects and displays user availability in real time.
+
+- **Real-Time Status Updates**  
+  Share and view statuses instantly with live view count updates, showing how many users have seen the status without reloading.
 
 - **Chat History**  
-  Persistent chat storage using MongoDB.
+  Persistent and searchable chat storage using MongoDB.
 
-- **Auto Scroll**  
-  Opens chats at the latest message without forced scrolling.
+- **Auto Scroll to Latest Message**  
+  Automatically opens chats at the most recent message for a smooth conversation flow.
 
----
+- **Secure Authentication**  
+  User login and session management with JWT-based security.
+
 
 ## 🛠️ Tech Stack
 
