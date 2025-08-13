@@ -14,6 +14,8 @@ const initialState = {
     pendingMessages: {},
 
     currentOpenChatId: null,
+
+    allMessages : null , // This is the total messages which is in db 
         
     unread: {},                     // { chatId: count }
 
@@ -22,6 +24,8 @@ const initialState = {
     allArrangedChatId : null,
 
     localLoading : false,
+
+    botHistory:[]
 
 }
 
@@ -45,7 +49,7 @@ export const userSlice = createSlice({
         setAllUsers:(state,action)=>{
             state.allUsers = action.payload;
         },
-        
+
         clearAllUsers:(state)=>{
             state.allUsers = null
         },
@@ -55,17 +59,26 @@ export const userSlice = createSlice({
             
             const pending = state.pendingMessages[chatId] || [];
             // state.chatHistory[chatId] = [...messages, ...pending];
-            state.chatHistory[chatId] = [...messages];
+            // state.chatHistory[chatId] = messages;
+            if (!state.chatHistory) {
+                state.chatHistory = {};
+            }
+
+            state.chatHistory[chatId] = messages;
             
             delete state.pendingMessages[chatId];
 
         },
 
+        setFullChatHistory:(state,action)=>{  // For the total chat history
+            state.chatHistory = action.payload
+        },
+
         addMessage: (state, action) => {
             const { chatId, message } = action.payload;
 
-            if (state.chatHistory[chatId]) {
-                state.chatHistory[chatId].push(message);
+            if (state.chatHistory?.[chatId]) {
+                state.chatHistory?.[chatId].push(message);
             } else {
                 if (!state.pendingMessages[chatId]) {
                     state.pendingMessages[chatId] = [];
@@ -84,10 +97,15 @@ export const userSlice = createSlice({
 
         },
 
+        setUnread :(state,action)=>{
+            state.unread = action.payload
+        },
+
         setCurrentOpenChat: (state, action) => {
             state.currentOpenChatId = action.payload;
-            // Reset unread when opening chat
-            delete state.unread[action.payload];
+            if (state.unread && typeof state.unread === "object") {
+                delete state.unread[action.payload];
+            }
         },
 
         setAllChatId :(state,action)=>{
@@ -134,12 +152,26 @@ export const userSlice = createSlice({
                 state.allUsers[userIndex].isOnline = true;
                 state.allUsers[userIndex].lastSeen = Date.now();
             }
+        },
+
+        setBotHistory: (state, action) => {
+            const { data } = action.payload;
+            state.botHistory.push(data); // ✅ correct
+        },
+
+        setAllMessages :(state,action)=>{
+            state.allMessages = action.payload
+        },
+
+        clearAllMessages:(state,action)=>{
+            state.allMessages = null
         }
+
 
 
 
     }
 })
 
-export const {setLoading, setUserDetails, clearUserDetails,setAllUsers,clearAllUsers,addMessage,setChatHistory,setCurrentOpenChat,setAllArrangedChatId,clearAllArrangedChatId,setAllChatId,clearAllChatId,setLocalLoading,setUserOffline,setUserOnline} = userSlice.actions
+export const {setLoading, setUserDetails, clearUserDetails,setAllUsers,clearAllUsers,addMessage,setChatHistory,setCurrentOpenChat,setAllArrangedChatId,clearAllArrangedChatId,setAllChatId,clearAllChatId,setLocalLoading,setUserOffline,setUserOnline,setBotHistory,setAllMessages,clearAllMessages,setUnread,setFullChatHistory} = userSlice.actions
 export default userSlice.reducer

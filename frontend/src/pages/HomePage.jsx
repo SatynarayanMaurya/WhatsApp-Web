@@ -1,13 +1,12 @@
 import { Outlet } from 'react-router-dom'
 import SlimLeftSidebar from '../components/SlimLeftSidebar'
-import HeroSection from './HeroSection'
 import { apiConnector } from '../services/apiConnector';
 import { userEndpoints } from '../services/apis';
 import { setAllUsers, setLoading, setUserDetails } from '../Redux/Slices/userSlice';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import Spinner from '../components/Spinner';
+import IndividualStatusPageSkeleton from '../components/IndividualStatusPageSkeleton';
 
 
 function HomePage() {
@@ -51,20 +50,21 @@ function HomePage() {
     useEffect(()=>{
         getUserDetails();
     },[])
+    
     useEffect(()=>{
         getAllUsers()
     },[])
 
 
   return (
-    <div className='bg-yellow-400 flex justify-between'>
-      {loading && <Spinner/>}
+    <div className=' flex justify-between h-screen'>
+      {loading && <IndividualStatusPageSkeleton/>}
 
-      <div className='w-[4vw] bg-orange-500'>
+      <div className='lg:w-[4vw] w-[15vw] flex-shrink-0'>
         <SlimLeftSidebar/>
       </div>
 
-      <div className='w-[96vw] bg-[#161717]'>
+      <div className='lg:w-[96vw] w-[65rem] bg-[#161717]'>
         <Outlet/>
       </div>
     </div>

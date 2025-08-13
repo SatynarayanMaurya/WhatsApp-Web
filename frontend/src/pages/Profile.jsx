@@ -10,14 +10,18 @@ import LogoutModal from '../components/LogoutModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { setLoading } from '../Redux/Slices/userSlice';
+import { clearUserDetails, setLoading, setUserDetails } from '../Redux/Slices/userSlice';
 import { apiConnector } from '../services/apiConnector';
 import { userEndpoints } from '../services/apis';
+import Spinner from '../components/Spinner';
 function Profile() {
     const dispatch = useDispatch()
     const userDetails = useSelector((state)=>state.user.userDetails)
+    const loading = useSelector((state)=>state.user.loading)
     const [name, setName ] = useState("")
     const [about, setAbout ] = useState("")
+    const [file,setFile] = useState(null)
+    const [isUpdated,setIsUpdated] = useState(false)
 
     useEffect(()=>{
         setName(userDetails?.name)
@@ -38,6 +42,8 @@ function Profile() {
             dispatch(setLoading(false))
             setIsEditAbout(false)
             setIsEditName(false)
+            dispatch(clearUserDetails())
+            setIsUpdated(!isUpdated)
         }
         catch(error){
             console.log("Error in updating profile : ",error)
@@ -46,28 +52,79 @@ function Profile() {
         }
     }
 
+    const getUserDetails = async()=>{
+        try{
+            if(userDetails) return;
+            dispatch(setLoading(true))
+            const result = await apiConnector("GET",userEndpoints.GET_USER_DETAILS)
+            dispatch(setUserDetails(result?.data?.userDetails))
+            dispatch(setLoading(false))
+        }
+        catch(error){
+            toast.error(error?.response?.data?.message || "Error in getting the user details")
+            dispatch(setLoading(false))
+            console.log("Error in getting the user details : ",error)
+        }
+    }
+
+    useEffect(()=>{
+        getUserDetails()
+    },[isUpdated])
+
+    const updateProfilePicture = async(e)=>{
+        try{
+            if(!file){
+                toast.warning("Please select one photo")
+                return ;
+            }
+            dispatch(setLoading(true))
+            const result = await apiConnector("PUT",userEndpoints.UPDATE_PROFILE_PICTURE,{image:file}, {"Content-Type": "multipart/form-data" })
+            toast.success(result?.data?.message || "Profile Picture updated")
+            dispatch(clearUserDetails())
+            dispatch(setLoading(false))
+            setIsUpdated(!isUpdated)
+            setFile(null)
+
+        }
+        catch(error){
+            console.log("Error in updating the Profile Picture : ",error)
+            toast.error(error?.response?.data?.message || "Error in updating the profile Picture")
+            dispatch(setLoading(false))
+        }
+    }
+  
+
   return (
     <div className='text-white flex justify-between h-screen'>
-      <div  className=' w-[32%] p-6 flex flex-col gap-4 border-r border-[#454545] relative'>
+        {loading&& <Spinner/>}
+      <div  className=' lg:w-[32%] w-[25rem] p-6 flex flex-col gap-4 border-r border-[#454545] relative'>
         <div className='flex justify-between items-center'>
 
         <p className='text-xl font-semibold'>Profile</p>
         <p onClick={()=>navigate("/")} className='text-3xl cursor-pointer'><IoCloseOutline/></p>
         </div>
 
-        <div className='flex justify-center mt-8'>
-        <div className='relative group w-28 h-28'>
-            <img
-            src={proifleImage}
-            alt="Profile"
-            className='w-full h-full object-cover rounded-full'
-            />
-            
-            <label htmlFor="selectImage" className='text-2xl cursor-pointer absolute inset-0 flex items-center justify-center bg-black/30 bg-opacity-50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto'>
-            <CiEdit/>
-                <input id='selectImage' type="file" className='hidden' />
-            </label>
-        </div>
+        <div className='flex flex-col items-center mt-8'>
+            <div className='relative group w-28 h-28'>
+                <img
+                src={userDetails?.profileImage ||proifleImage}
+                alt="Profile"
+                className='w-full h-full object-cover rounded-full'
+                />
+                
+                <label htmlFor="selectImage" className='text-2xl cursor-pointer absolute inset-0 flex items-center justify-center bg-black/30 bg-opacity-50 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto'>
+                <CiEdit/>
+                    <input onChange={(e)=>setFile(e.target.files[0])} id='selectImage' type="file" className='hidden' />
+                </label>
+            </div>
+
+            {
+                file !== null &&
+                <div className='mt-6 flex items-center gap-5'>
+                    <p>{file?.name?.slice(0,15)}</p>
+                    <button onClick={updateProfilePicture} className='px-4 py-1 rounded-lg bg-blue-500 text-white font-semibold  cursor-pointer'>Update </button>
+                </div> 
+            }
         </div>
 
         <div className='flex flex-col gap-6 mt-6'>
@@ -104,10 +161,10 @@ function Profile() {
         </div>
       </div>
 
-      <div  className=' w-[68%] flex justify-center items-center'>
+      <div  className=' lg:w-[68%] w-[40rem] flex justify-center items-center'>
         <div className='flex flex-col gap-8 justify-center items-center'>
-            <p className='text-[4vw] text-[#a0a0a0]'><CgProfile/></p>
-            <p className='text-[2.5vw] font-light'>Profile</p>
+            <p className='lg:text-[4vw] text-[6rem] text-[#a0a0a0]'><CgProfile/></p>
+            <p className='lg:text-[2.5vw] text-[2.5rem] font-light'>Profile</p>
         </div>
       </div>
 

@@ -18,12 +18,11 @@ function IndividualChat() {
   const [message,setMessage] = useState("")
   const dispatch = useDispatch();
   const [chatId,setChatId] = useState("")
-  const loading = useSelector((state)=>state.user.loading)
-  const [chatHistoryLocal, setChatHistoryLocal] = useState([])
   const userDetails = useSelector((state)=>state.user.userDetails)
   const {id} = useParams()
   const allUsers = useSelector((state)=>state.user.allUsers)
   const findUser = allUsers?.find((user)=>user?._id === id)
+  const allMessages = useSelector((state)=>state.user.allMessages)
 
   const chatHistory = useSelector((state)=>state.user.chatHistory)
   const allArrangedChatId = useSelector((state)=>state.user.allArrangedChatId)
@@ -43,10 +42,8 @@ function IndividualChat() {
     const handleReceive = (data) => {
       dispatch(addMessage({ chatId: data.chatId, message: data }));
     };
-    // console.log("Message data is : ",messageData)
 
     socket.emit("sendMessage", messageData); // emit to backend
-    setChatHistoryLocal((prev)=>[...prev,messageData])
     handleReceive(messageData)
     setMessage(""); // clear input
   };
@@ -57,11 +54,10 @@ function IndividualChat() {
 
       if(chatHistory?.[currentOpenChatId]) return ;
       dispatch(setLocalLoading(true))
-
-      const result = await apiConnector("GET",`${chatEndpoints.GET_CHAT_HISTORY}?chatId=${currentOpenChatId}`,)
-      
-      setChatHistoryLocal(result?.data?.messages)
-      dispatch(setChatHistory({chatId:currentOpenChatId,messages:result?.data?.messages}))
+      // const result = await apiConnector("GET",`${chatEndpoints.GET_CHAT_HISTORY}?chatId=${currentOpenChatId}`)
+      const result2 = allMessages?.filter((msg)=>msg?.chatId === currentOpenChatId)
+      // dispatch(setChatHistory({chatId:currentOpenChatId,messages:result?.data?.messages}))
+      dispatch(setChatHistory({chatId:currentOpenChatId,messages:result2}))
       dispatch(setLocalLoading(false))
 
     }
@@ -73,7 +69,7 @@ function IndividualChat() {
   }
   useEffect(()=>{
     getChatHistory()
-  },[chatId])
+  },[chatId,allMessages])
 
   const getChatId = async ()=>{
     try{
@@ -91,6 +87,7 @@ function IndividualChat() {
     }
     catch(error){
       console.log("Error in getting the chat id : ",error)
+      toast.error(error?.response?.data?.message || error.message)
       dispatch(setLocalLoading(false))
     }
   }
@@ -161,7 +158,6 @@ function IndividualChat() {
     });
   }, [currentOpenChatId]);
 
-
   return (
     <div className='text-white'>
 
@@ -174,15 +170,15 @@ function IndividualChat() {
       <div ref={chatContainerRef} className='flex flex-col gap-2 px-20 py-4  h-[82vh] overflow-scroll scrollbar-slim'>
 
         {
-          chatHistory?.[chatId]?.map((chat)=>{
-            return chat?.sender !== userDetails?._id ? <div key={chat?.timestamp} className='flex '>
-                    <div className='px-4 py-1 max-w-[40vw] pr-[4rem] rounded-lg border bg-[#262524] border-[#333333] relative'>
+          chatHistory?.[currentOpenChatId]?.map((chat,index)=>{
+            return chat?.sender !== userDetails?._id ? <div key={chat?.timestamp+index} className='flex '>
+                    <div className='px-4 py-1 lg:max-w-[40vw] max-w-[20rem] pr-[4rem] rounded-lg border bg-[#262524] border-[#333333] relative'>
                       <p>{chat?.message} </p>
                       <p className='text-[11px] text-[#fff9] absolute bottom-0 right-2 whitespace-nowrap'>{getDateTimeParts(chat?.timestamp)?.time} </p>
                     </div>
                   </div>:
-                  <div key={chat?.timestamp} className='flex justify-end'>
-                    <div className='px-4 py-1 max-w-[40vw] pr-[5.5rem] rounded-lg border bg-[#15603e] border-[#333333] relative'>
+                  <div key={chat?.timestamp+index} className='flex justify-end'>
+                    <div className='px-4 py-1  lg:max-w-[40vw] max-w-[20rem]  pr-[5.5rem] rounded-lg border bg-[#15603e] border-[#333333] relative'>
                       <p>{chat?.message} </p>
                       <p className='text-[11px] text-[#fff9] absolute bottom-0 right-2 whitespace-nowrap flex gap-2 items-center'>{getDateTimeParts(chat?.timestamp)?.time} 
                         <span className={`${chat?.seen && "text-blue-400"}`}>

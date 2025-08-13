@@ -1,5 +1,6 @@
 const User = require("../models/user.model")
-
+const { uploadImageToCloudinary } = require("../utils/uploadToCloudinary")
+const cloudinary = require('cloudinary').v2
 
 exports.getUserDetails = async(req,res)=>{
     try{
@@ -36,7 +37,6 @@ exports.getAllUsers = async (req ,res)=>{
     }
 }
 
-
 exports.updateProfile = async(req,res)=>{
     try{
         const {name,about} = req.body;
@@ -69,11 +69,68 @@ exports.updateProfile = async(req,res)=>{
     }
 }
 
+exports.updateProfilePicture = async(req,res)=>{
+    try{
+        const image = req?.files?.image;
+        const supportedTypes = ["png", "jpg", "jpeg"];
+        let uploadedImageUrls = [];
+        let publicIdOfImages = [];
+        const exitingUser = await User.findById(req.user._id)
+
+        if (image) {
+            const mimeType = image?.mimetype?.split("/")[1];
+            if (!supportedTypes.includes(mimeType)) {
+                return res.status(400).json({
+                success: false,
+                message: "Only PNG, JPG, and JPEG file types are supported",
+                });
+            }
+
+            try {
+                if (exitingUser?.publicUrlOfProfileImage) {
+                    try {
+                        await cloudinary.uploader.destroy(exitingUser?.publicUrlOfProfileImage);
+                    } catch (err) {
+                        console.error(`Failed to delete image at index`, err.message);
+                    }
+                }
+                const upload = await uploadImageToCloudinary(
+                image,
+                process.env.PROFILE_IMAGE,
+                `${exitingUser?.name}`
+                );
+
+                uploadedImageUrls=upload?.secure_url || "";
+                publicIdOfImages= upload?.public_id || "";
+            } catch (error) {
+                return res.status(500).json({
+                success: false,
+                message:error.message|| `Error uploading image `,
+                errorMessage: error.message,
+                });
+            }
+        }
+
+        await User.findByIdAndUpdate(req.user?._id,{$set:{profileImage:uploadedImageUrls,publicUrlOfProfileImage:publicIdOfImages}})
+
+        return res.status(200).json({
+            success:true,
+            message:"Profile Picture Updated !"
+        })
+    }
+    catch(error){
+        return res.status(500).json({
+            success:false,
+            message:error?.message ||  "Error in updating the profile picture "
+        })
+    }
+}
 
 exports.markAsOffline = async(userId)=>{
     try{
         if(!userId){
             console.log("User id not found ")
+            return;
         }
         const updatedUser = await User.findByIdAndUpdate({_id:userId},{isOnline:false,lastSeen:Date.now()})
         return updatedUser;
@@ -86,7 +143,8 @@ exports.markAsOffline = async(userId)=>{
 exports.markAsOnline = async(userId)=>{
     try{
         if(!userId){
-            console.log("User id not found ")
+            console.log("User id not found ");
+            return;
         }
         const updatedUser = await User.findByIdAndUpdate({_id:userId},{isOnline:true,lastSeen:Date.now()})
         return updatedUser;

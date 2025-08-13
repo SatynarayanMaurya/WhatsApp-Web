@@ -33,9 +33,9 @@ export default function LoginPage() {
         e.preventDefault();
 
         if (!formData.phone.trim() || !formData.password.trim()) {
-        toast.warn("Both fields are required");
-        return;
-        }
+            toast.warn("Both fields are required");
+            return;
+            }
         dispatch(setLoading(true))
         const result = await apiConnector("POST",authEndpoints.LOGIN,formData)
         toast.success(result?.data?.message)
@@ -46,7 +46,7 @@ export default function LoginPage() {
     }
     catch(error){
         dispatch(setLoading(false))
-        toast.error(error?.response?.data?.message || "Error in login ")
+        toast.error(error?.response?.data?.message || error.message || "Error in login in frontend ")
         console.log("Error in login : ",error)
     }
   };
@@ -54,9 +54,9 @@ export default function LoginPage() {
   return (
     <div className=" bg-gray-100">
         {loading && <Spinner/>}
-        <div className="h-screen w-9/12 mx-auto flex justify-between items-center ">
+        <div className="h-screen w-9/12 mx-auto lg:flex-row flex-col flex lg:justify-between lg:gap-0 gap-24 lg:pt-0 pt-8 items-center ">
             <div>
-                <img src="https://neo-pay.in/css/img/loginimage.png" alt="" className="w-[40vw] object-cover" />
+                <img src="https://neo-pay.in/css/img/loginimage.png" alt="" className="lg:w-[40vw] w-[90vw] object-cover" />
             </div>
             <motion.div
                 className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full"

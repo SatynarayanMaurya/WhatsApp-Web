@@ -31,7 +31,7 @@ function LogoutModal({closeModal}) {
   return (
     <div className='fixed inset-0 backdrop-blur-md bg-black/30 flex justify-center items-center'>
         {loading && <Spinner/>}
-        <div className='w-[30vw] h-[30vh] rounded-2xl items-center bg-white text-black flex flex-col gap-2 p-6'>
+        <div className='lg:w-[30vw] lg:h-[30vh]  rounded-2xl items-center bg-white text-black flex flex-col gap-2 p-6'>
 
             <p className='text-4xl text-red-500'><MdOutlineLogout/></p>
             <p className='text-xl font-semibold'>Logout</p>

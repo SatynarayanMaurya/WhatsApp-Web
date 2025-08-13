@@ -132,3 +132,19 @@ exports.seenMessages = async(data)=>{
   }
 }
 
+exports.getAllMessages = async(req,res)=>{
+  try{
+    const allMessages = await Message.find()
+    return res.status(200).json({
+      success:true,
+      message:"All messages are fetched successfully !",
+      allMessages
+    })
+  }
+  catch(error){
+    return res.status(500).json({
+      success:false,
+      message: error?.message ||"Error in getting all the messages "
+    })
+  }
+}

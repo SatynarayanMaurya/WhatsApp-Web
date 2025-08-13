@@ -1,7 +1,7 @@
 import React from 'react'
 import profileImage from "../assets/profile image.jpg"
 import { IoCallOutline } from "react-icons/io5";
-function ChatHeader({findUser}) {
+function ChatHeader({findUser={}}) {
 
   function splitDateTime(isoString) {
     if(!isoString) return
@@ -26,11 +26,15 @@ function ChatHeader({findUser}) {
                 <img src={findUser?.profileImage || `https://i.pravatar.cc/100`} alt="" className='w-10 h-10 rounded-full object-cover' />
             </div>
             <div>
-              <p className='font-semibold text-[17px]'>{findUser?.name}</p>
+              <p className='font-semibold text-[17px]'>{findUser?.name || "Chat Bot"}</p>
               {
-                findUser?.isOnline === true ?
-                <p className='text-green-500 font-light text-sm'>Online</p>:
-                <p className='font-light text-sm'>Last seen at {splitDateTime(findUser?.lastSeen)?.time} </p>
+                Object.keys(findUser || {}).length !== 0  ? 
+                (   
+                  findUser?.isOnline === true ?
+                  <p className='text-green-500 font-light text-sm'>Online</p>:
+                  <p className='font-light text-sm'>Last seen at {splitDateTime(findUser?.lastSeen)?.time} </p> 
+                ):
+                <p className='font-light text-sm text-green-500'>Online</p>
               }
             </div>
         </div>

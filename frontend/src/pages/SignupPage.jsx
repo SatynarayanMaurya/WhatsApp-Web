@@ -62,9 +62,9 @@ export default function SignupPage() {
     <div className="bg-gray-100">
       {loading && <Spinner/>}
 
-    <div className="min-h-screen w-10/12 mx-auto  flex items-center justify-between p-4">
+    <div className="min-h-screen w-10/12 mx-auto  lg:flex-row flex-col flex lg:justify-between lg:gap-0 gap-24 lg:pt-0 pt-8 items-center p-4">
         <div>
-            <img src={signupImge} alt="" className="w-[40vw] object-cover" />
+            <img src={signupImge} alt="" className="lg:w-[40vw] w-[90vw] object-cover" />
         </div>
 
       <motion.div

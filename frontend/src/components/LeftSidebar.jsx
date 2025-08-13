@@ -8,6 +8,7 @@ import { userEndpoints } from '../services/apis'
 import Spinner from "../components/Spinner"
 import {toast} from "react-toastify"
 function LeftSidebar() {
+    
     const navigate = useNavigate ()
     const userDetails = useSelector((state)=>state.user.userDetails)
     const allUsers = useSelector((state)=>state.user.allUsers)
@@ -16,13 +17,11 @@ function LeftSidebar() {
     const unread = useSelector((state)=>state.user.unread)
     const allChatId = useSelector((state)=>state.user.allChatId)
 
-    const chatTypes = [
-        "All","Unread","Favorites","Groups"
-    ]
+    const chatTypes = ["All","Unread","Favorites","Groups"];
     const [activeTab,setActiveTab] = useState("All")
 
     function formatTimestampToTime(ms) {
-        if (!ms) return ""; // handle empty/null case
+        if (!ms) return ""; 
         const date = new Date(ms);
         return date.toLocaleTimeString([], {
             hour: '2-digit',

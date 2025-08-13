@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "", // URL to profile picture (can be base64 or Cloudinary URL)
     },
+    publicUrlOfProfileImage: {
+        type: String,
+        default: "", // URL to profile picture (can be base64 or Cloudinary URL)
+    },
     isOnline: {
         type: Boolean,
         default: false,

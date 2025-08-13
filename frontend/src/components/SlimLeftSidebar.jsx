@@ -1,28 +1,36 @@
 import React from 'react'
 import metaIcon from "../assets/meta.png"
 import profileImage from "../assets/profile image.jpg"
-import { useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 function SlimLeftSidebar() {
 
     const navigate = useNavigate()
+    const userDetails = useSelector((state)=>state.user.userDetails)
   return (
     <div className='bg-[#1D1F1F] border-r border-[#454545] min-h-screen text-white flex flex-col items-center justify-between py-6 '>
         
         <div className='flex flex-col items-center gap-4'>
 
-            <div className='group relative p-2 rounded-full  bg-zinc-700 hover:bg-zinc-700 transition-all duration-200 cursor-pointer'>
+            <NavLink to={"/"}   className={({ isActive }) => 
+                `group relative p-2 rounded-full transition-all duration-200 cursor-pointer 
+                ${isActive ? 'bg-zinc-700 hover:bg-zinc-700' : 'hover:bg-zinc-700'}`
+            }>
                 <div className='  '>
                     <svg viewBox="0 0 24 24" height="24" width="24" preserveAspectRatio="xMidYMid meet" className="" fill="none"><title>chat-filled-refreshed</title><path fillRule="evenodd" clipRule="evenodd" d="M22.0002 6.66667C22.0002 5.19391 20.8062 4 19.3335 4H1.79015C1.01286 4 0.540213 4.86348 0.940127 5.53L3.00016 9V17.3333C3.00016 18.8061 4.19406 20 5.66682 20H19.3335C20.8062 20 22.0002 18.8061 22.0002 17.3333V6.66667ZM7.00016 10C7.00016 9.44772 7.44787 9 8.00016 9H17.0002C17.5524 9 18.0002 9.44772 18.0002 10C18.0002 10.5523 17.5524 11 17.0002 11H8.00016C7.44787 11 7.00016 10.5523 7.00016 10ZM8.00016 13C7.44787 13 7.00016 13.4477 7.00016 14C7.00016 14.5523 7.44787 15 8.00016 15H14.0002C14.5524 15 15.0002 14.5523 15.0002 14C15.0002 13.4477 14.5524 13 14.0002 13H8.00016Z" fill="currentColor"></path></svg>
                 </div>
                 <p className='pointer-events-none text-sm px-4 py-1 rounded-xl bg-white text-black absolute top-2 left-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200'>Chats</p>
-            </div>
+            </NavLink>
 
-            <div className='group relative'>
-                <div className='p-2 rounded-full text-[#A9AAAA]  hover:bg-zinc-700 transition-all duration-200 cursor-pointer '>
+            <NavLink to={"/status"} className={({ isActive }) => 
+                        `group relative p-2 rounded-full transition-all duration-200 cursor-pointer 
+                        ${isActive ? 'bg-zinc-700 hover:bg-zinc-700' : 'hover:bg-zinc-700'}`
+                    }>
+                <div>
                     <svg viewBox="0 0 24 24" height="24" width="24" preserveAspectRatio="xMidYMid meet" className="" fill="none"><title>status-refreshed</title><path d="M13.5628 3.13661C13.6587 2.59272 14.1794 2.22464 14.711 2.37436C15.7905 2.6784 16.8135 3.16254 17.736 3.80856C18.9323 4.64623 19.9305 5.73573 20.6606 7.00048C21.3907 8.26524 21.8349 9.67455 21.962 11.1294C22.0601 12.2513 21.9677 13.3794 21.6911 14.4662C21.5549 15.0014 20.9758 15.2682 20.4568 15.0792C19.9378 14.8903 19.677 14.317 19.7998 13.7785C19.9843 12.9693 20.0422 12.1343 19.9696 11.3035C19.8679 10.1396 19.5126 9.01217 18.9285 8.00036C18.3444 6.98856 17.5458 6.11696 16.5888 5.44682C15.9057 4.96842 15.1536 4.60099 14.3606 4.35609C13.8329 4.19312 13.4669 3.6805 13.5628 3.13661Z" fill="currentColor"></path><path d="M18.8944 17.785C19.3175 18.14 19.3759 18.7749 18.9804 19.1604C18.1774 19.9433 17.2466 20.5872 16.2259 21.0631C14.9023 21.6802 13.4597 22 11.9993 21.9999C10.5389 21.9998 9.09633 21.6798 7.77287 21.0625C6.7522 20.5864 5.82149 19.9424 5.01855 19.1594C4.62314 18.7739 4.68167 18.1389 5.10479 17.784C5.52792 17.4291 6.15484 17.4898 6.55976 17.8654C7.16828 18.4298 7.86245 18.8974 8.61829 19.25C9.67707 19.7438 10.8312 19.9998 11.9994 19.9999C13.1677 20 14.3218 19.7442 15.3807 19.2505C16.1366 18.898 16.8308 18.4304 17.4394 17.8661C17.8444 17.4906 18.4713 17.43 18.8944 17.785Z" fill="currentColor"></path><path d="M3.54277 15.0781C3.02379 15.267 2.4447 15.0001 2.30857 14.4649C2.03215 13.3781 1.9399 12.2501 2.03806 11.1283C2.16533 9.6736 2.60965 8.26443 3.33978 6.99982C4.06991 5.73521 5.06815 4.64585 6.26432 3.8083C7.1868 3.16239 8.20975 2.67832 9.28915 2.37433C9.82075 2.22461 10.3414 2.59269 10.4373 3.13659C10.5332 3.68048 10.1672 4.1931 9.6395 4.35605C8.84657 4.60092 8.09458 4.9683 7.41146 5.44662C6.45452 6.11666 5.65593 6.98815 5.07183 7.99983C4.48772 9.01152 4.13226 10.1389 4.03045 11.3026C3.95776 12.1334 4.01559 12.9683 4.19998 13.7774C4.3227 14.3159 4.06175 14.8892 3.54277 15.0781Z" fill="currentColor"></path><path fillRule="evenodd" clipRule="evenodd" d="M12.0001 16C14.2092 16 16.0001 14.2091 16.0001 12C16.0001 9.79086 14.2092 8 12.0001 8C9.79092 8 8.00006 9.79086 8.00006 12C8.00006 14.2091 9.79092 16 12.0001 16ZM12.0001 18C15.3138 18 18.0001 15.3137 18.0001 12C18.0001 8.68629 15.3138 6 12.0001 6C8.68635 6 6.00006 8.68629 6.00006 12C6.00006 15.3137 8.68635 18 12.0001 18Z" fill="currentColor"></path></svg>
                 </div>
                 <p className='pointer-events-none  text-sm px-4 py-1 rounded-xl bg-white text-black absolute top-2 left-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200'>Status</p>
-            </div>
+            </NavLink>
 
             <div className='group relative'>
                 <div className='p-2 rounded-full text-[#A9AAAA]  hover:bg-zinc-700 transition-all duration-200 cursor-pointer '>
@@ -40,7 +48,7 @@ function SlimLeftSidebar() {
 
             <div className='w-full h-2 border-t border-[#A9AAAA]'></div>
 
-            <div className='group relative'>
+            <div onClick={()=>navigate('/meta-ai')} className='group relative cursor-pointer'>
                 <img src={metaIcon} alt="" className='w-7' />
                 <p className='pointer-events-none text-sm px-4 py-1 rounded-xl w-[6vw] bg-white text-black absolute top-1 left-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
                     Meta AI
@@ -58,10 +66,10 @@ function SlimLeftSidebar() {
         </div>
 
         <div onClick={()=>navigate("/profile")} className='group relative'>
-            <img src={profileImage} alt="" className='w-7 h-7 rounded-full object-cover cursor-pointer' />
-            <p className='pointer-events-none text-sm px-4 py-1 rounded-xl w-[6vw] bg-white text-black absolute top-1 left-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
+            <img src={userDetails?.profileImage ||profileImage} alt="" className='w-7 h-7 rounded-full object-cover cursor-pointer' />
+            {/* <p className='pointer-events-none text-sm px-4 py-1 rounded-xl w-[6vw] bg-white text-black absolute top-1 left-12 opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
             Profile
-            </p>
+            </p> */}
         </div>
 
       </div>
