@@ -126,8 +126,13 @@ function Profile() {
                 </div> 
             }
         </div>
+          
+        <div className='flex  gap-6 items-center mt-4'>
+            <p className='text-[#a0a0a0]'>Phone : </p>
+            <p className=''>{userDetails?.phone}</p>
+        </div>
 
-        <div className='flex flex-col gap-6 mt-6'>
+        <div className='flex flex-col gap-6 mt-4'>
             <p className='text-[#a0a0a0]'>Your Name</p>
             <div className='flex justify-between items-center'>
                 <input type="text" name="" id="" value={name || ""} onChange={(e)=>setName(e.target.value)} className={` rounded-full ${isEditName && "border px-6 py-2"}  border-[#454545] outline-none`} />
