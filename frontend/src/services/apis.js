@@ -1,18 +1,10 @@
-// const BASE_URL = "http://localhost:4000"
-// const BASE_URL = "http://192.168.1.19:4000"
-const BASE_URL =
-  window.location.hostname === "localhost"
-    ? "http://localhost:4000"
-    : "http://192.168.1.19:4000";
-
-
+const BASE_URL = "https://whatsapp-web-r6dr.onrender.com"
 
 export const authEndpoints = {
     SIGN_UP : BASE_URL + "/signup",
     LOGIN : BASE_URL + "/login",
     LOGOUT : BASE_URL + "/logout",
 }
-
 
 export const userEndpoints = {
     GET_USER_DETAILS : BASE_URL + "/get-user-details",
